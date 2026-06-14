@@ -86,8 +86,17 @@ export default function App() {
   const handleUpdateProfile = (e: React.FormEvent) => {
     e.preventDefault();
     setIsUpdating(true);
+    
+    // Validate and clamp age strictly to healthy limits (12 to 110) on unlock/submission
+    const validatedAge = Math.min(110, Math.max(12, profile.age || 27));
+    const validatedProfile = {
+      ...profile,
+      age: validatedAge
+    };
+    setProfile(validatedProfile);
+
     setTimeout(() => {
-      const computed = computeNutriGenomicArchetype(profile);
+      const computed = computeNutriGenomicArchetype(validatedProfile);
       setArchetype(computed);
       setIsUpdating(false);
 
@@ -348,8 +357,21 @@ export default function App() {
                     <input 
                       type="number"
                       id="age-input"
-                      value={profile.age}
-                      onChange={(e) => setProfile({ ...profile, age: Math.min(110, Math.max(12, parseInt(e.target.value) || 25)) })}
+                      value={profile.age || ""}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val === "") {
+                          setProfile({ ...profile, age: "" as any });
+                        } else {
+                          const parsed = parseInt(val, 10);
+                          setProfile({ ...profile, age: isNaN(parsed) ? 0 : parsed });
+                        }
+                      }}
+                      onBlur={() => {
+                        // Gently clamp to healthy range when user finishes typing and leaves the input
+                        const clamped = Math.min(110, Math.max(12, profile.age || 27));
+                        setProfile({ ...profile, age: clamped });
+                      }}
                       className="w-full text-sm py-2 px-3 bg-neutral-50 rounded-xl border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-rose-400"
                     />
                   </div>

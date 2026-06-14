@@ -1,5 +1,5 @@
 {
-  "name": "Diet Coach and Friend",
+  "name": "Bloom with Sam",
   "description": "A supportive, non-judgmental diet planner and friendly chat coach that creates highly personalized nutritional plans, provides bio-genomic archetyping, and supports you through your wellness journey.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
